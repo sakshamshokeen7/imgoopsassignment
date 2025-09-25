@@ -5,8 +5,8 @@
 using namespace std;
 
 template <typename T>
-class Vector; // Forward declaration for your custom Vector
-class Submission; // Forward declaration
+class Vector; 
+class Submission; 
 
 class Assignment {
 private:
@@ -24,4 +24,4 @@ public:
     void getSubmissions() const;
 };
 
-#endif // ASSIGNMENT_H
+#endif 

@@ -16,4 +16,4 @@ class Member {
         bool login(int inputRoll, string inputPwd);
 };
 
-#endif // MEMBER_H
+#endif 
