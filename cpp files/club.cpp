@@ -1,5 +1,5 @@
-#include "club.h"
-#include "Member.h"
+#include "../headers/Club.h"
+#include "../headers/Member.h"
 #include <iostream>
 using namespace std;
 
@@ -22,6 +22,17 @@ void club::listallmembers() {
 
 void club::addMember(Member* m) {
     members.push_back(m);
+}
+
+void club::removeMember(Member* m){
+    for(int i=0; i<members.getSize(); i++){
+        if(members.get(i) == m){
+            members.erase(i);
+            cout << "Member removed successfully.\n";
+            return;
+        }
+    }
+    cout << "Member not found in the club.\n";
 }
 
 void club::listallassignments() {
