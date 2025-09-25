@@ -1,5 +1,6 @@
 #include "../headers/Club.h"
 #include "../headers/Member.h"
+#include "../headers/Assignment.h"
 #include <iostream>
 using namespace std;
 
@@ -22,6 +23,10 @@ void club::listallmembers() {
 
 void club::addMember(Member* m) {
     members.push_back(m);
+}
+
+void club::addAssignment(Assignment* a) {
+    assignments.push_back(a);
 }
 
 void club::removeMember(Member* m){

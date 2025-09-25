@@ -29,6 +29,7 @@ class club {
         void listallassignments();
         void addMember(Member* m);
         void removeMember(Member* m);
+    void addAssignment(Assignment* a);
 };
 
 #endif 
