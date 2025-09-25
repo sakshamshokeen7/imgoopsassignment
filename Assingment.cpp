@@ -1,42 +1,32 @@
-#include<iostream>
-#include<string>
+
+#include "Assignment.h"
+#include <iostream>
 using namespace std;
 
-class Assignment{
-    private:
-    string title;
-    int maxScore;
-    string deadline;
-    Vector<Submission*> submissions;
+Assignment::Assignment(string t, int ms, string d) {
+    title = t;
+    maxScore = ms;
+    deadline = d;
+}
 
-    public:
-    Assignment(string t , int ms , string d){
-        title = t;
-        maxScore = ms;
-        deadline = d;
-    }
-        string getTitle() const { return title; }
-        int getMaxScore() const { return maxScore; }
-        string getDeadline() const { return deadline; }
+string Assignment::getTitle() const { return title; }
+int Assignment::getMaxScore() const { return maxScore; }
+string Assignment::getDeadline() const { return deadline; }
 
-    void addSubmission(Submission s){
-        submissions.push_back(s);
-    }
+void Assignment::addSubmission(Submission* s) {
+    submissions.push_back(s);
+}
 
-    Vector<Submission*> getSubmissions(){
-        
-       cout << "Your Assignment Submissions:\n";
-        if (submissions.isEmpty()) {
-            cout << "  [No submissions]\n";
-            return;
-        }
-
-        for (int i = 0; i < submissions.getSize(); i++) {
-            cout << "  - " << submissions.get(i)->getTitle()
-                 << " (Max Score: " << submissions.get(i)->getMaxScore()
-                 << ", Deadline: " << submissions.get(i)->getDeadline() << ")\n";
-        }
+void Assignment::getSubmissions() const {
+    cout << "Your Assignment Submissions:\n";
+    if (submissions.isEmpty()) {
+        cout << "  [No submissions]\n";
+        return;
     }
 
-
+    for (int i = 0; i < submissions.getSize(); i++) {
+        cout << "  - " << submissions.get(i)->getTitle()
+             << " (Max Score: " << submissions.get(i)->getMaxScore()
+             << ", Deadline: " << submissions.get(i)->getDeadline() << ")\n";
+    }
 }
