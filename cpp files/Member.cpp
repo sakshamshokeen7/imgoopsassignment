@@ -1,29 +1,19 @@
 #include<iostream>
-#include<string>
-#include "club.h" 
+#include "Member.h"
+#include "club.h"
+#include <string>
 using namespace std;
 
-class Member{
-    private:
-    string name;
-    int rollNumber;
-    string password;
-
-    public:
-    Member(string n, int r, string p) {
-        name = n;
-        rollNumber = r;
-        password = p;
-    }
-
-    void joinClub(club* c){
-        c->addMember(this);
-    }
-
-    bool login(int inputRoll, string inputPwd) {
-        return rollNumber == inputRoll && password == inputPwd;
-    }
-
-
+Member::Member(string n, int r, string p) {
+    name = n;
+    rollNumber = r;
+    password = p;
 }
-    
+
+void Member::joinClub(club* c) {
+    c->addMember(this);
+}
+
+bool Member::login(int inputRoll, string inputPwd) {
+    return rollNumber == inputRoll && password == inputPwd;
+}
