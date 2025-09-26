@@ -1,4 +1,4 @@
-#include "Student.h"
+#include "student.h"
 #include "Assignment.h"
 #include "Submission.h"
 #include "club.h"
