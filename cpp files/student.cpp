@@ -1,7 +1,7 @@
 #include "Student.h"
 #include "Assignment.h"
 #include "Submission.h"
-#include "Club.h"
+#include "club.h"
 #include <iostream>
 
 Student::Student(int roll, std::string n, std::string pass)
