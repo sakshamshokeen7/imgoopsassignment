@@ -1,25 +1,37 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-#include <iostream>
-using namespace std;
+#include <stdexcept>
 
 template <typename T>
 class Vector {
 private:
     T* arr;
-    int capacity;
     int size;
+    int capacity;
+
+    void resize(int newCapacity);
 
 public:
     Vector();
     ~Vector();
+    Vector(const Vector<T>& other);
+    Vector<T>& operator=(const Vector<T>& other);
 
     void push_back(const T& value);
     void pop_back();
     T& operator[](int index);
+    const T& operator[](int index) const;
+
+    T& get(int index);
+    const T& get(int index) const;
+
     int getSize() const;
     bool empty() const;
+    void clear();
 };
+
+
+#include "vector.cpp"
 
 #endif

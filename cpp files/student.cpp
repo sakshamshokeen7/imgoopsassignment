@@ -25,7 +25,7 @@ void Student::viewAssignments() {
 void Student::listAllClubs() const {
     std::cout << "Clubs for student " << getName() 
               << " (Roll: " << getRoll() << "):\n";
-    if (clubs.isEmpty()) {
+    if (clubs.empty()) {
         std::cout << "  [No clubs joined]\n";
         return;
     }
