@@ -2,6 +2,7 @@
 #include "../headers/club.h"
 #include "../headers/Member.h"
 #include "../headers/student.h"
+#include "../headers/Admin.h"
 #include "../headers/vector.h"
 #include <iostream>
 #include <string>
@@ -139,11 +140,59 @@ void Controller::runCLI() {
                 cout << "Exiting the system. Goodbye!\n";
                 break;
             } 
-    
-    // cout << "Exiting CLI. Goodbye.\n";
   } else {
     if (choice == 1) {
-
+        if (dynamic_cast<Admin*>(current_user)) {
+            string clubName;
+            cout << "Enter club name: ";
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            getline(cin, clubName);
+            if (findClub(clubName)) {
+                cout << "Club with this name already exists.\n";
+            } else {
+                club* newClub = new club(clubName, dynamic_cast<Admin*>(current_user));
+                clubs.push_back(newClub);
+                cout << "Club '" << clubName << "' created successfully.\n";
+            }
+        } else {
+            cout << "Only Admins can create clubs.\n";
+        }
+    } else if (choice == 2) {
+        string clubName;
+        cout << "Enter club name to join: ";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        getline(cin, clubName);
+        club* c = findClub(clubName);
+        if (c) {
+            c->addMember(current_user);
+            if (Student* s = dynamic_cast<Student*>(current_user)) {
+                s->getClubs().push_back(c);
+            }
+            cout << "Joined club '" << clubName << "' successfully.\n";
+        } else {
+            cout << "Club not found.\n";
+        }
+    } else if (choice == 3) {
+        if (Student* s = dynamic_cast<Student*>(current_user)) {
+            s->listAllClubs();
+        } else {
+            cout << "Only Students can view their clubs.\n";
+        }
+    } else if (choice == 4) {
+        if (clubs.empty()) {
+            cout << "No clubs available.\n";
+        } else {
+            cout << "Available Clubs:\n";
+            for (int i = 0; i < clubs.getSize(); i++) {
+                cout << "- " << clubs.get(i)->getName() << "\n";
+            }
+        }
+    } else if (choice == 5) {
+        cout << "Logging out " << current_user->getName() << ".\n";
+        current_user = nullptr;
+    } else if (choice == 6) {
+        cout << "Exiting the system. Goodbye!\n";
+        break;
     }
   }
  }
