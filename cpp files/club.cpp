@@ -21,7 +21,6 @@ void club::listallmembers() {
     }
 }
 
-
 void club::addMember(Member* m) {
     members.push_back(m);
 }

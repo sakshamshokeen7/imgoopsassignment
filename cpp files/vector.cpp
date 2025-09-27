@@ -69,11 +69,6 @@ const T& Vector<T>::operator[](int index) const {
 }
 
 template <typename T>
-T& Vector<T>::get(int index) {
-    return operator[](index);
-}
-
-template <typename T>
 const T& Vector<T>::get(int index) const {
     return operator[](index);
 }
@@ -88,10 +83,6 @@ bool Vector<T>::empty() const {
     return size == 0;
 }
 
-template <typename T>
-void Vector<T>::clear() {
-    size = 0;
-}
 template <typename T>
 void Vector<T>::erase(int index) {
     if (index < 0 || index >= size) return;
