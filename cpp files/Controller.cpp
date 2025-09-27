@@ -18,6 +18,32 @@ using namespace std;
             if(students.get(i)->getRoll() == rollNumber){
                 return students.get(i);
             }
+
+//getchoice_function
+int get_choice(int num_choices) {
+    while (true) {
+        cout << "Enter choice: ";
+        int choice;
+        cin >> choice;
+        if(cin.fail()) {
+            cin.clear();
+            cin.ignore(10000, '\n');
+            cout << "Invalid input! Please enter a number." << endl;
+            continue;
+        }
+        if (choice >= 1 && choice <= num_choices) {
+            return choice;
+        }
+        cout << "Invalid choice! Please enter a number between 1 and " << num_choices << "." << endl;
+    }
+}
+
+//find student function
+Student* findStudent(int rollNumber){
+    for(int i=0 ; i < students.getSize(); i++){
+        if(students.get(i)->getRoll() == rollNumber){
+            return students.get(i);
+
         }
         return nullptr;
     }
@@ -31,6 +57,20 @@ using namespace std;
         }
         return nullptr;
     }
+
+
+//display menu
+void display_menu(const vector<string>& options, const string& header="Choose an option:") {
+    cout << "\n" << string(header.size(), '=') << endl;
+    cout << header << endl;
+    cout << string(header.size(), '=') << endl;
+    for (size_t i = 0; i < options.size(); ++i) {
+        cout << "[" << (i+1) << "] " << options[i] << endl;
+    }
+    cout << endl;
+}
+
+
 
 void Controller::runCLI() {
  
