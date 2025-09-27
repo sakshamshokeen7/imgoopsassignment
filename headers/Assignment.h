@@ -2,6 +2,7 @@
 #define ASSIGNMENT_H
 
 #include <string>
+#include "vector.h"
 using namespace std;
 
 template <typename T>
@@ -21,7 +22,7 @@ public:
     int getMaxScore() const;
     string getDeadline() const;
     void addSubmission(Submission* s);
-    void getSubmissions() const;
+    Vector<Submission*>& getSubmissions();
 };
 
 #endif 

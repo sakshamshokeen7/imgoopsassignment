@@ -3,6 +3,7 @@
 #define STUDENT_H
 
 #include "Member.h"
+#include "Vector.h"
 #include <string>
 
 template<typename T>

@@ -12,6 +12,7 @@ private:
 
 public:
     Member(std::string n, int r, std::string p);
+    virtual ~Member() = default;
 
     void joinClub(club* c);
     bool login(int inputRoll, std::string inputPwd);

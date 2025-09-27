@@ -16,16 +16,7 @@ void Assignment::addSubmission(Submission* s) {
     submissions.push_back(s);
 }
 
-void Assignment::getSubmissions() const {
-    cout << "Your Assignment Submissions:\n";
-    if (submissions.isEmpty()) {
-        cout << "  [No submissions]\n";
-        return;
-    }
-
-    for (int i = 0; i < submissions.getSize(); i++) {
-        cout << "  - " << submissions.get(i)->getTitle()
-             << " (Max Score: " << submissions.get(i)->getMaxScore()
-             << ", Deadline: " << submissions.get(i)->getDeadline() << ")\n";
-    }
+Vector<Submission*>& Assignment::getSubmissions() {
+    return submissions;
 }
+// end Assignment implementation

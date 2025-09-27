@@ -1,7 +1,7 @@
-#include "../headers/Student.h"
+#include "../headers/student.h"
 #include "../headers/Assignment.h"
-#include "../headers/Submission.h"
-#include "../headers/Club.h"
+#include "../headers/submission.h"
+#include "../headers/club.h"
 #include <iostream>
 
 Student::Student(int roll, std::string n, std::string pass) : Member(n, roll, pass) {
