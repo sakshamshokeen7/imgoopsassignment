@@ -6,19 +6,19 @@
 #include "Assignment.h"
 #include "Vector.h"
 
-class Admin;   
 class Member;
+class Admin;
 class Assignment;
 
 class club {
     private:
         std::string Clubname;
-        Admin* admin;
+    Member* admin;
         Vector<Member*> members;
         Vector<Assignment*> assignments;
 
     public:
-        club(std::string name, Admin* a);
+    club(std::string name, Member* a);
 
         std::string getName() const { return Clubname; }
         Vector<Assignment*>* getAssignments() { return &assignments; }

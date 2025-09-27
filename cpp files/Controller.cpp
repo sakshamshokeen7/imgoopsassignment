@@ -142,21 +142,27 @@ void Controller::runCLI() {
             } 
   } else {
     if (choice == 1) {
-        if (dynamic_cast<Admin*>(current_user)) {
-            string clubName;
-            cout << "Enter club name: ";
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            getline(cin, clubName);
-            if (findClub(clubName)) {
-                cout << "Club with this name already exists.\n";
+            // Allow Students to create a club and become its Admin
+            if (Student* s = dynamic_cast<Student*>(current_user)) {
+                string clubName;
+                cout << "Enter club name: ";
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                getline(cin, clubName);
+                if (findClub(clubName)) {
+                    cout << "Club with this name already exists.\n";
+                } else {
+                        // Use the Student as the club admin (Member*)
+                        club* newClub = new club(clubName, s);
+                        clubs.push_back(newClub);
+                        // add creator to members of the club
+                        newClub->addMember(s);
+                        // also register the student in global members list if not already
+                        members.push_back(s);
+                        cout << "Club '" << clubName << "' created successfully and " << s->getName() << " is now the admin.\n";
+                }
             } else {
-                club* newClub = new club(clubName, dynamic_cast<Admin*>(current_user));
-                clubs.push_back(newClub);
-                cout << "Club '" << clubName << "' created successfully.\n";
+                cout << "Only logged-in Students can create clubs.\n";
             }
-        } else {
-            cout << "Only Admins can create clubs.\n";
-        }
     } else if (choice == 2) {
         string clubName;
         cout << "Enter club name to join: ";
