@@ -1,6 +1,6 @@
 #include<iostream>
 #include "../headers/Member.h"
-#include "../headers/Club.h"
+#include "../headers/club.h"
 #include <string>
 using namespace std;
 

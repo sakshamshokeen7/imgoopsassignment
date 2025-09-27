@@ -6,46 +6,41 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <limits>
 using namespace std;
 
     Vector<Student*> students;
     Vector<club*> clubs;
     Member* current_user = nullptr;
 
+    //getchoice_function
+    int get_choice(int num_choices) {
+        while (true) {
+            cout << "Enter choice: ";
+            int choice;
+            cin >> choice;
+            if(cin.fail()) {
+                cin.clear();
+                cin.ignore(10000, '\n');
+                cout << "Invalid input! Please enter a number." << endl;
+                continue;
+            }
+            if (choice >= 1 && choice <= num_choices) {
+                return choice;
+            }
+            cout << "Invalid choice! Please enter a number between 1 and " << num_choices << "." << endl;
+        }
+    }
+
     //find student function
     Student* findStudent(int rollNumber){
         for(int i=0 ; i < students.getSize(); i++){
             if(students.get(i)->getRoll() == rollNumber){
                 return students.get(i);
+
             }
-
-//getchoice_function
-int get_choice(int num_choices) {
-    while (true) {
-        cout << "Enter choice: ";
-        int choice;
-        cin >> choice;
-        if(cin.fail()) {
-            cin.clear();
-            cin.ignore(10000, '\n');
-            cout << "Invalid input! Please enter a number." << endl;
-            continue;
         }
-        if (choice >= 1 && choice <= num_choices) {
-            return choice;
-        }
-        cout << "Invalid choice! Please enter a number between 1 and " << num_choices << "." << endl;
-    }
-}
-
-//find student function
-Student* findStudent(int rollNumber){
-    for(int i=0 ; i < students.getSize(); i++){
-        if(students.get(i)->getRoll() == rollNumber){
-            return students.get(i);
-
-        }
-        return nullptr;
+            return nullptr;
     }
 
     //find club function
@@ -59,143 +54,98 @@ Student* findStudent(int rollNumber){
     }
 
 
-//display menu
-void display_menu(const vector<string>& options, const string& header="Choose an option:") {
-    cout << "\n" << string(header.size(), '=') << endl;
-    cout << header << endl;
-    cout << string(header.size(), '=') << endl;
-    for (size_t i = 0; i < options.size(); ++i) {
-        cout << "[" << (i+1) << "] " << options[i] << endl;
+    //display menu
+    void display_menu(const vector<string>& options, const string& header="Choose an option:") {
+        cout << "\n" << string(header.size(), '=') << endl;
+        cout << header << endl;
+        cout << string(header.size(), '=') << endl;
+        for (size_t i = 0; i < options.size(); ++i) {
+            cout << "[" << (i+1) << "] " << options[i] << endl;
+        }
+        cout << endl;
     }
-    cout << endl;
-}
 
 
 
 void Controller::runCLI() {
  
-        cout << "\n=== Welcome to the Club Management System ===\n";
+    cout << "\n=== Welcome to the Club Management System ===\n";
 
     while (true) {
         cout << "\n--- MAIN MENU ---\n";
         vector<string> options;
         if(!current_user){
             options = {
+                "Register as Member",
                 "Login as Member",
-                "Register as Student",
-                "Register as Assignment Reviewer",
                 "Exit"
             };
         } else {
             options = {
-                "List Clubs",
-                "Join Club",
-                "Create Club (Admin)",
-                "Add Assignment (Assignment Reviewer)",
-                "View Assignments",
-                "Submit Assignment",
+                "Create a Club (Admin)",
+                "Join a Club",
                 "View my Clubs",
+                "List all Clubs",
+                // "Add Assignment (Assignment Reviewer)",
+                // "View Assignments",
+                // "Submit Assignment",
                 "Logout",
                 "Exit"
             };
         }
+        display_menu(options);
+        int choice = get_choice(options.size());
 
         if(!current_user){
             if(choice == 1){
-                
-            }
-        }
-        switch (choice) {
-            case 1: {
-                string clubName;
-                cout << "Enter club name: ";
-                getline(cin, clubName);
-
-                string adminName;
-                cout << "Enter admin name: ";
-                getline(cin, adminName);
-
-                int adminRoll;
-                cout << "Enter admin roll number: ";
-                cin >> adminRoll;
+                int roll;
+                string name;
+                int password;
+                cout << "Enter roll number: ";
+                cin >> roll;
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "Enter name: ";
+                getline(cin, name);
+                cout << "Enter password: ";
+                cin >> password;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                try{
+                    Student* s = new Student(roll, name, to_string(password));
+                    students.push_back(s);
+                    cout << "Student registered successfully.\n";
+                } catch (exception& e){
+                    cout << "Error registering student. Please try again.\n";
+                }
 
-                string adminPwd;
-                cout << "Enter admin password: ";
-                getline(cin, adminPwd);
-
-                // Simple scaffold store
-                clubNames.push_back(clubName);
-
-                // Example real object creation (uncomment and adapt to your constructors & headers):
-                // Admin* admin = new Admin(adminName, adminRoll, adminPwd);
-                // club* c = new club(clubName, admin);
-                // clubs.push_back(c);
-
-                cout << "Club '" << clubName << "' created (scaffold).\n";
-                break;
-            }
-
-            case 2: {
-                cout << "\nClubs:\n";
-                if (clubs.empty()) {
-                    cout << "  (no clubs created)\n";
-                } else {
-                    for (size_t i = 0; i < clubNames.size(); ++i) {
-                        cout << "  [" << i << "] " << clubNames[i] << "\n";
+            } else if(choice == 2){
+                int roll;
+                int password;
+                cout << "Enter roll number: ";
+                cin >> roll;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "Enter password: ";
+                cin >> password;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                for(int i=0; i<students.getSize(); i++){
+                    if(students.get(i)->login(roll, to_string(password))){
+                        current_user = students.get(i);
+                        cout << "Login successful. Welcome, " << current_user->getName() << "!\n";
+                        break;
+                    } else {
+                        cout << "Login failed. Please check your credentials.\n";
                     }
                 }
-                // If storing actual club* in a vector, you can list details:
-                // for (size_t i = 0; i < clubs.size(); ++i) {
-                //     cout << "  [" << i << "] " << clubs[i]->getName() << "\n";
-                // }
+            } else if (choice == 3) {
+                cout << "Exiting the system. Goodbye!\n";
                 break;
-            }
+            } 
+    
+    // cout << "Exiting CLI. Goodbye.\n";
+  } else {
+    if (choice == 1) {
 
-            case 3: {
-                if (clubs.empty()) {
-                    cout << "No clubs exist. Create a club first.\n";
-                    break;
-                }
-                int idx;
-                cout << "Enter club index to add assignment to: ";
-                cin >> idx;
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                if (idx < 0 || idx >= (int)clubs.size()) {
-                    cout << "Invalid index.\n";
-                    break;
-                }
-                string title;
-                cout << "Assignment title: ";
-                getline(cin, title);
-                int maxScore;
-                cout << "Max score: ";
-                cin >> maxScore;
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                string deadline;
-                cout << "Deadline (string): ";
-                getline(cin, deadline);
-
-
-                cout << "Assignment '" << title << "' created for club '" << clubs[idx]->getName() << "' (scaffold)\n";
-
-                Assignment* a = new Assignment(title, maxScore, deadline);
-                 clubs[idx]->addAssignment(a);
-
-                break;
-            }
-
-            case 4: {
-                cout << "Help:\n";
-                cout << " - Use option 1 to create a club scaffold (or create real club objects by uncommenting code and ensuring constructors match).\n";
-                cout << " - Option 3 shows how to create an Assignment and add to a club (requires Club::addAssignment and Assignment constructor).\n";
-                break;
-            }
-
-            default:
-                cout << "Unknown option.\n";
-        }
     }
+  }
+ }
 
-    cout << "Exiting CLI. Goodbye.\n";
 }
