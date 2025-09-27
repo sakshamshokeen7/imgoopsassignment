@@ -24,13 +24,16 @@ void Student::viewAssignments() {
 }
 
 void Student::listAllClubs() const {
-    std::cout << "Clubs for student " << getName() 
-              << " (Roll: " << getRoll() << "):\n";
+    std::cout << "Clubs for student " << getName()
+              << " (Roll: " << getRoll() << "):" << std::endl;
+    // diagnostic: print pointer and size
+    std::cout << "(debug) student ptr: " << this << std::endl;
+    std::cout << "(debug) clubs size: " << clubs.getSize() << std::endl;
     if (clubs.empty()) {
-        std::cout << "  [No clubs joined]\n";
+        std::cout << "  [No clubs joined]" << std::endl;
         return;
     }
     for (int i = 0; i < clubs.getSize(); i++) {
-        std::cout << "  - " << clubs.get(i)->getName() << "\n";
+        std::cout << "  - " << clubs.get(i)->getName() << std::endl;
     }
 }
