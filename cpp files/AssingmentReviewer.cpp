@@ -2,6 +2,7 @@
 #include "../headers/Assignment.h"
 #include "../headers/Club.h"
 #include <string>
+#include <iostream>
 using namespace std;
 
 AssingmentReviewer::AssingmentReviewer(string n, int r, string p) : Member(n, r, p) {

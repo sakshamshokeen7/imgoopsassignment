@@ -7,19 +7,19 @@
 #include "Vector.h"
 
 
-class Club;
+class club;
 class Assignment;
 
 class Student : public Member {
 private:
-    Vector<Club*> clubs;  
+    Vector<club*> clubs;  
 
 public:
     
     Student(int roll, std::string n, std::string pass);
 
     
-    void joinClub(Club* c);      
+    void joinClub(club* c);      
     void listAllClubs() const;    
 
     

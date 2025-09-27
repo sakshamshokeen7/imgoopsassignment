@@ -1,14 +1,14 @@
 #include "../headers/Admin.h"
 #include "../headers/Club.h"
+#include "../headers/Student.h"   
 
-Admin::Admin(string n, int r, string p) : Member(n, r, p) {
-	
+Admin::Admin(std::string n, int r, std::string p)
+    : Member(n, r, p) {}
+
+void Admin::addStudent(club* c, Student* student) {
+    c->addMember(student);   
 }
 
-void Admin::addStudent(club* club, Student* student) { 
-    club->addMember(student);
-}
-
-void Admin::removeStudent(club* club, Student* student) {
-    club->removeMember(student);
+void Admin::removeStudent(club* c, Student* student) {
+    c->removeMember(student);
 }

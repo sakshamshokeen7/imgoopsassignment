@@ -10,16 +10,17 @@ club::club(string name, Admin* a) {
 }
 
 void club::listallmembers() {
-    cout << "members of clubs:" << Clubname << "\n";
+    cout << "members of club: " << Clubname << "\n";
     if (members.empty()) {
         cout << "NO MEMBERS\n";
         return;
     }
-    for (int i = 0; i < members.getsize(); ++i) {
-        cout << "-" << members.get(i)->getName() << " roll no: " <<
-         members.get(i)->getRoll() << "\n";
+    for (int i = 0; i < members.getSize(); ++i) {   
+        cout << "- " << members.get(i)->getName()
+             << " roll no: " << members.get(i)->getRoll() << "\n";
     }
 }
+
 
 void club::addMember(Member* m) {
     members.push_back(m);
@@ -42,7 +43,7 @@ void club::removeMember(Member* m){
 
 void club::listallassignments() {
     cout << "Assignments in Club " << Clubname << ":\n";
-    if (assignments.isEmpty()) {
+    if (assignments.empty()) {
         cout << "  [No assignments]\n";
         return;
     }
@@ -52,3 +53,4 @@ void club::listallassignments() {
              << ", Deadline: " << assignments.get(i)->getDeadline() << ")\n";
     }
 }
+

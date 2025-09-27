@@ -1,35 +1,33 @@
 #ifndef CLUB_H
 #define CLUB_H
 
-#include <iostream>
 #include <string>
-using namespace std;
+#include "Member.h"
+#include "Assignment.h"
+#include "Vector.h"
 
-class Admin; 
-class Member; 
-class Assignment; 
-
-template <typename T>
-class Vector; 
+class Admin;   
+class Member;
+class Assignment;
 
 class club {
-    private:
-        string Clubname;
-        Admin* admin;
-        Vector<Member*> members;
-        Vector<Assignment*> assignments;
+private:
+    std::string Clubname;
+    Admin* admin;
+    Vector<Member*> members;
+    Vector<Assignment*> assignments;
 
-    public:
-            club(string name, Admin* a) {
-                Clubname = name;
-                admin = a;
-            }
+public:
+    club(std::string name, Admin* a);
 
-        void listallmembers();
-        void listallassignments();
-        void addMember(Member* m);
-        void removeMember(Member* m);
+    std::string getName() const { return Clubname; }
+    Vector<Assignment*>* getAssignments() { return &assignments; }
+
+    void listallmembers();
+    void addMember(Member* m);
+    void removeMember(Member* m);
     void addAssignment(Assignment* a);
+    void listallassignments();
 };
 
-#endif 
+#endif

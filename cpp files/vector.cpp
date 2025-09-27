@@ -1,5 +1,8 @@
 #include "vector.h"
 
+class Club;
+class Assignment;
+class Submission;
 template <typename T>
 Vector<T>::Vector() : size(0), capacity(10) {
     arr = new T[capacity];
@@ -89,3 +92,14 @@ template <typename T>
 void Vector<T>::clear() {
     size = 0;
 }
+template <typename T>
+void Vector<T>::erase(int index) {
+    if (index < 0 || index >= size) return;
+    for (int i = index; i < size - 1; i++) {
+        arr[i] = arr[i + 1];
+    }
+    size--;
+}
+template class Vector<Club*>;
+template class Vector<Assignment*>;
+template class Vector<Submission*>;

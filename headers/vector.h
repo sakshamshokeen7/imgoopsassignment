@@ -20,6 +20,8 @@ public:
 
     void push_back(const T& value);
     void pop_back();
+    void erase(int index);   
+
     T& operator[](int index);
     const T& operator[](int index) const;
 
@@ -30,7 +32,6 @@ public:
     bool empty() const;
     void clear();
 };
-
 
 #include "vector.cpp"
 
