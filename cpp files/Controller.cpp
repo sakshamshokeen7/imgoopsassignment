@@ -152,10 +152,17 @@ void Controller::runCLI() {
                     cout << "Club with this name already exists.\n";
                 } else {
                         // Use the Student as the club admin (Member*)
+                                std::cout << "(debug) student ptr: " << s << std::endl;
+                                std::cout << "(debug) student clubs size before: " << s->getClubs().getSize() << std::endl;
                         club* newClub = new club(clubName, s);
                         clubs.push_back(newClub);
+                                std::cout << "(debug) student clubs size after: " << s->getClubs().getSize() << std::endl;
+                                std::cout << "(debug) newClub ptr: " << newClub << std::endl;
                         // add creator to members of the club
                         newClub->addMember(s);
+                        // also add the club to the student's clubs list so they can view it
+                        s->getClubs().push_back(newClub);
+                        cout << "(debug) student's clubs size after add: " << s->getClubs().getSize() << "\n";
                         // also register the student in global members list if not already
                         members.push_back(s);
                         cout << "Club '" << clubName << "' created successfully and " << s->getName() << " is now the admin.\n";
