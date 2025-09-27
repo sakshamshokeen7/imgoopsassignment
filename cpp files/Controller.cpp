@@ -8,14 +8,38 @@
 #include <vector>
 using namespace std;
 
+    Vector<Student*> students;
+    Vector<club*> clubs;
+    Member* current_user = nullptr;
+
+//find student function
+Student* findStudent(int rollNumber){
+    for(int i=0 ; i < students.getSize(); i++){
+        if(students.get(i)->getRoll() == rollNumber){
+            return students.get(i);
+        }
+    }
+    return nullptr;
+}
+
+//find club function
+club* findClub(const string& clubName){
+    for(int i=0 ; i < clubs.getSize(); i++){
+        if(clubs.get(i)->getName() == clubName){
+            return clubs.get(i);
+        }
+    }
+    return nullptr;
+}
+
+//
+
 void Controller::runCLI() {
  
-    Vector<Student*> students;
-    Vector<Club*> clubs;
-    Member* current_user = nullptr;
-    while (true) {
+        cout << "\n=== Welcome to the Club Management System ===\n";
 
-        cout << "\n=== Club Management Management CLI ===\n";
+    while (true) {
+        cout << "";
         cout << "1) Create club\n";
         cout << "2) List clubs\n";
         cout << "3) Create assignment (assignment reviewer)\n";
