@@ -16,8 +16,8 @@ class Controller {
     public:
         void runCLI();
         void handleMemberActions(Member* member);
-        Vector<club*>& listClubsOfStudent(Student* student);
-        Vector<Member*>& listMembersOfClub(club* club);
+        Vector<club*>& listClubs();
+        Vector<Member*>& listMembers();
         void displayAssignments(Student* student);
         void viewAssignmentSubmissions(club* club);
 };
