@@ -32,7 +32,5 @@ public:
     bool empty() const;
     void clear();
 };
-
 #include "vector.cpp"
-
 #endif
