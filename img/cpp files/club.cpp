@@ -1,10 +1,10 @@
-#include "../headers/Club.h"
+#include "../headers/club.h"
 #include "../headers/Member.h"
 #include "../headers/Assignment.h"
 #include <iostream>
 using namespace std;
 
-club::club(string name, Admin* a) {
+club::club(string name, Member* a) {
     Clubname = name;
     admin = a;
 }
