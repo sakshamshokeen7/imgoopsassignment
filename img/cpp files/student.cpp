@@ -14,10 +14,10 @@ void Student::submitAssignment(Assignment* assignment, std::string submissionDat
 }
 
 void Student::viewAssignments() {
-    for (int i = 0; i < clubs.getSize(); i++) {
+    for (std::size_t i = 0; i < clubs.getSize(); ++i) {
         Vector<Assignment*>* assignments = clubs.get(i)->getAssignments();
         std::cout << "Assignments in Club " << clubs.get(i)->getName() << ":\n";
-        for (int j = 0; j < assignments->getSize(); j++) {
+        for (std::size_t j = 0; j < assignments->getSize(); ++j) {
             std::cout << "  - " << assignments->get(j)->getTitle() << "\n";
         }
     }
@@ -26,14 +26,12 @@ void Student::viewAssignments() {
 void Student::listAllClubs() const {
     std::cout << "Clubs for student " << getName()
               << " (Roll: " << getRoll() << "):" << std::endl;
-    // diagnostic: print pointer and size
-    std::cout << "(debug) student ptr: " << this << std::endl;
-    std::cout << "(debug) clubs size: " << clubs.getSize() << std::endl;
+    // list clubs the student belongs to
     if (clubs.empty()) {
         std::cout << "  [No clubs joined]" << std::endl;
         return;
     }
-    for (int i = 0; i < clubs.getSize(); i++) {
+    for (std::size_t i = 0; i < clubs.getSize(); ++i) {
         std::cout << "  - " << clubs.get(i)->getName() << std::endl;
     }
 }

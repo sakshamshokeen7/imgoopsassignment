@@ -13,6 +13,10 @@ class Controller {
     private:
         Vector<club*> clubs;
         Vector<Member*> members;
+        Vector<Student*> students;
+        // find a club by name within this controller's clubs vector
+        club* findClub(const std::string& clubName);
+        Student* findStudent(int rollNumber);
     public:
         void runCLI();
         void handleMemberActions(Member* member);

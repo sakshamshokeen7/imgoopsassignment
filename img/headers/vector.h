@@ -30,9 +30,10 @@ public:
     }
 
     T& get(std::size_t idx) {
-        if (idx >= length) 
-            throw std::out_of_range("index"); 
-            return data[idx];
+        if (idx >= length) {
+            throw std::out_of_range("index");
+        }
+        return data[idx];
      }
     const T& get(std::size_t idx) const { 
         if (idx >= length) 

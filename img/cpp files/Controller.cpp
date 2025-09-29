@@ -10,9 +10,7 @@
 #include <limits>
 using namespace std;
 
-    Vector<Student*> students;
-    Vector<club*> clubs;
-    Member* current_user = nullptr;
+// Controller-managed data will be used instead of globals.
 
     //getchoice_function
     int get_choice(int num_choices) {
@@ -33,26 +31,16 @@ using namespace std;
         }
     }
 
-    //find student function
-    Student* findStudent(int rollNumber){
-        for(int i=0 ; i < students.getSize(); i++){
-            if(students.get(i)->getRoll() == rollNumber){
-                return students.get(i);
-
-            }
-        }
-            return nullptr;
+// Find a student in this controller's students list
+Student* Controller::findStudent(int rollNumber) {
+    for (std::size_t i = 0; i < students.getSize(); ++i) {
+        if (students.get(i)->getRoll() == rollNumber) return students.get(i);
     }
+    return nullptr;
+}
 
-    //find club function
-    club* findClub(const string& clubName){
-        for(int i=0 ; i < clubs.getSize(); i++){
-            if(clubs.get(i)->getName() == clubName){
-                return clubs.get(i);
-            }
-        }
-        return nullptr;
-    }
+// The Controller::findClub method is implemented below and uses the
+// Controller instance's `clubs` member.
 
 
     //display menu
@@ -68,6 +56,14 @@ using namespace std;
 
 
 
+// Helper: find a club within this controller
+club* Controller::findClub(const string& clubName) {
+    for (std::size_t i = 0; i < clubs.getSize(); ++i) {
+        if (clubs.get(i)->getName() == clubName) return clubs.get(i);
+    }
+    return nullptr;
+}
+
 void Controller::runCLI() {
  
     cout << "\n=== Welcome to the Club Management System ===\n";
@@ -75,7 +71,12 @@ void Controller::runCLI() {
     while (true) {
         cout << "\n--- MAIN MENU ---\n";
         vector<string> options;
-        if(!current_user){
+    // `current_user` is stored as a Controller member via `members`
+    // but the code uses a single active user variable. We'll store it
+    // as a local static pointer so the rest of the logic works the same.
+    static Member* current_user = nullptr;
+
+    if(!current_user){
             options = {
                 "Register as Member",
                 "Login as Member",
@@ -112,7 +113,9 @@ void Controller::runCLI() {
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 try{
                     Student* s = new Student(roll, name, to_string(password));
+                    // add student to both students list and members list (for login/search)
                     students.push_back(s);
+                    members.push_back(s);
                     cout << "Student registered successfully.\n";
                 } catch (exception& e){
                     cout << "Error registering student. Please try again.\n";
@@ -127,15 +130,20 @@ void Controller::runCLI() {
                 cout << "Enter password: ";
                 cin >> password;
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                for(int i=0; i<students.getSize(); i++){
-                    if(students.get(i)->login(roll, to_string(password))){
-                        current_user = students.get(i);
-                        cout << "Login successful. Welcome, " << current_user->getName() << "!\n";
-                        break;
-                    } else {
-                        cout << "Login failed. Please check your credentials.\n";
+                // search registered members (students) for credentials
+                bool loggedIn = false;
+                for (std::size_t i = 0; i < members.getSize(); ++i) {
+                    // only students are allowed to login via roll/password
+                    if (Student* s = dynamic_cast<Student*>(members.get(i))) {
+                        if (s->login(roll, to_string(password))) {
+                            current_user = s;
+                            cout << "Login successful. Welcome, " << current_user->getName() << "!\n";
+                            loggedIn = true;
+                            break;
+                        }
                     }
                 }
+                if (!loggedIn) cout << "Login failed. Please check your credentials.\n";
             } else if (choice == 3) {
                 cout << "Exiting the system. Goodbye!\n";
                 break;
@@ -148,23 +156,24 @@ void Controller::runCLI() {
                 cout << "Enter club name: ";
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 getline(cin, clubName);
-                if (findClub(clubName)) {
+                if (this->findClub(clubName)) {
                     cout << "Club with this name already exists.\n";
                 } else {
                         // Use the Student as the club admin (Member*)
-                                std::cout << "(debug) student ptr: " << s << std::endl;
-                                std::cout << "(debug) student clubs size before: " << s->getClubs().getSize() << std::endl;
+            // create club and set admin
                         club* newClub = new club(clubName, s);
+                        // push into this Controller's clubs list
                         clubs.push_back(newClub);
-                                std::cout << "(debug) student clubs size after: " << s->getClubs().getSize() << std::endl;
-                                std::cout << "(debug) newClub ptr: " << newClub << std::endl;
-                        // add creator to members of the club
+                        
+                        // add creator to members of the club (club::addMember already avoids duplicates)
                         newClub->addMember(s);
-                        // also add the club to the student's clubs list so they can view it
-                        s->getClubs().push_back(newClub);
-                        cout << "(debug) student's clubs size after add: " << s->getClubs().getSize() << "\n";
-                        // also register the student in global members list if not already
-                        members.push_back(s);
+                        // also add the club to the student's clubs list so they can view it (avoid duplicates)
+                        bool studentHasClub = false;
+                        for (std::size_t k = 0; k < s->getClubs().getSize(); ++k) {
+                            if (s->getClubs().get(k) == newClub) { studentHasClub = true; break; }
+                        }
+                        if (!studentHasClub) s->getClubs().push_back(newClub);
+                        // member was already pushed during registration; no-op here
                         cout << "Club '" << clubName << "' created successfully and " << s->getName() << " is now the admin.\n";
                 }
             } else {
@@ -175,11 +184,15 @@ void Controller::runCLI() {
         cout << "Enter club name to join: ";
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         getline(cin, clubName);
-        club* c = findClub(clubName);
+        club* c = this->findClub(clubName);
         if (c) {
             c->addMember(current_user);
             if (Student* s = dynamic_cast<Student*>(current_user)) {
-                s->getClubs().push_back(c);
+                bool already = false;
+                for (std::size_t i = 0; i < s->getClubs().getSize(); ++i) {
+                    if (s->getClubs().get(i) == c) { already = true; break; }
+                }
+                if (!already) s->getClubs().push_back(c);
             }
             cout << "Joined club '" << clubName << "' successfully.\n";
         } else {
@@ -193,7 +206,7 @@ void Controller::runCLI() {
                 cout << "You are not a member of any clubs.\n";
             } else {
                 cout << "Your Clubs:\n";
-                for (int i = 0; i < myClubs.getSize(); ++i) {
+                for (std::size_t i = 0; i < myClubs.getSize(); ++i) {
                     cout << "[" << (i + 1) << "] " << myClubs.get(i)->getName() << "\n";
                 }
 
@@ -207,7 +220,7 @@ void Controller::runCLI() {
                         cout << "Invalid input. Please enter a number.\n";
                         continue;
                     }
-                    if (sel < 0 || sel > myClubs.getSize()) {
+                    if (sel < 0 || static_cast<std::size_t>(sel) > myClubs.getSize()) {
                         cout << "Please enter a number between 0 and " << myClubs.getSize() << ".\n";
                         continue;
                     }
@@ -244,7 +257,7 @@ void Controller::runCLI() {
             cout << "No clubs available.\n";
         } else {
             cout << "Available Clubs:\n";
-            for (int i = 0; i < clubs.getSize(); i++) {
+            for (std::size_t i = 0; i < clubs.getSize(); ++i) {
                 cout << "- " << clubs.get(i)->getName() << "\n";
             }
         }
