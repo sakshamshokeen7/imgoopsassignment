@@ -151,10 +151,19 @@ void Controller::runCLI() {
                 if (findClub(clubName)) {
                     cout << "Club with this name already exists.\n";
                 } else {
+                        // Use the Student as the club admin (Member*)
+                                std::cout << "(debug) student ptr: " << s << std::endl;
+                                std::cout << "(debug) student clubs size before: " << s->getClubs().getSize() << std::endl;
                         club* newClub = new club(clubName, s);
                         clubs.push_back(newClub);
+                                std::cout << "(debug) student clubs size after: " << s->getClubs().getSize() << std::endl;
+                                std::cout << "(debug) newClub ptr: " << newClub << std::endl;
+                        // add creator to members of the club
                         newClub->addMember(s);
+                        // also add the club to the student's clubs list so they can view it
                         s->getClubs().push_back(newClub);
+                        cout << "(debug) student's clubs size after add: " << s->getClubs().getSize() << "\n";
+                        // also register the student in global members list if not already
                         members.push_back(s);
                         cout << "Club '" << clubName << "' created successfully and " << s->getName() << " is now the admin.\n";
                 }
@@ -183,59 +192,11 @@ void Controller::runCLI() {
         }
     } else if (choice == 3) {
         if (Student* s = dynamic_cast<Student*>(current_user)) {
-            // Get student's clubs (assumes getClubs() returns Vector<club*>&)
-            auto& myClubs = s->getClubs();
-            if (myClubs.getSize() == 0) {
-                cout << "You are not a member of any clubs.\n";
-            } else {
-                cout << "Your Clubs:\n";
-                for (int i = 0; i < myClubs.getSize(); ++i) {
-                    cout << "[" << (i + 1) << "] " << myClubs.get(i)->getName() << "\n";
-                }
-
-                // Prompt user to choose a club to open or 0 to go back
-                int sel;
-                while (true) {
-                    cout << "Enter club number to open or 0 to go back: ";
-                    if (!(cin >> sel)) {
-                        cin.clear();
-                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                        cout << "Invalid input. Please enter a number.\n";
-                        continue;
-                    }
-                    if (sel < 0 || sel > myClubs.getSize()) {
-                        cout << "Please enter a number between 0 and " << myClubs.getSize() << ".\n";
-                        continue;
-                    }
-                    break;
-                }
-
-                if (sel == 0) {
-                    // go back to main menu
-                } else {
-                    club* chosen = myClubs.get(sel - 1);
-                    // Simple club menu
-                    while (true) {
-                        vector<string> clubOptions = {
-                            "View Club Details",
-                            "Back"
-                        };
-                        display_menu(clubOptions, string("Club: ") + chosen->getName());
-                        int cchoice = get_choice(clubOptions.size());
-                        if (cchoice == 1) {
-                            cout << "Club Name: " << chosen->getName() << "\n";
-                            // If club class provides more info (members, admin), show here.
-                            // e.g. // cout << "Members: " << chosen->memberCount() << "\n";
-                        } else if (cchoice == 2) {
-                            break; // back to student's club list / main menu
-                        }
-                    }
-                }
-            }
+            s->listAllClubs();
         } else {
             cout << "Only Students can view their clubs.\n";
         }
-     } else if (choice == 4) {
+    } else if (choice == 4) {
         if (clubs.empty()) {
             cout << "No clubs available.\n";
         } else {
