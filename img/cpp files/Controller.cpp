@@ -6,11 +6,11 @@
 #include "vector.h"
 #include <iostream>
 #include <string>
+#include <algorithm>
+#include <cctype>
 #include <vector>
 #include <limits>
 using namespace std;
-
-// Controller-managed data will be used instead of globals.
 
     //getchoice_function
     int get_choice(int num_choices) {
@@ -39,9 +39,18 @@ Student* Controller::findStudent(int rollNumber) {
     return nullptr;
 }
 
-// The Controller::findClub method is implemented below and uses the
-// Controller instance's `clubs` member.
-
+    //find club function
+    static string normalizeName(const string& s) {
+        // trim whitespace (including CR) and convert to lowercase
+        size_t start = 0;
+        while (start < s.size() && isspace((unsigned char)s[start])) ++start;
+        size_t end = s.size();
+        while (end > start && isspace((unsigned char)s[end-1])) --end;
+        string t = (start < end) ? s.substr(start, end - start) : string();
+        // to lower
+        std::transform(t.begin(), t.end(), t.begin(), [](unsigned char c){ return std::tolower(c); });
+        return t;
+    }
 
     //display menu
     void display_menu(const vector<string>& options, const string& header="Choose an option:") {
@@ -71,10 +80,7 @@ void Controller::runCLI() {
     while (true) {
         cout << "\n--- MAIN MENU ---\n";
         vector<string> options;
-    // `current_user` is stored as a Controller member via `members`
-    // but the code uses a single active user variable. We'll store it
-    // as a local static pointer so the rest of the logic works the same.
-    static Member* current_user = nullptr;
+        static Member* current_user = nullptr;
 
     if(!current_user){
             options = {
@@ -159,17 +165,13 @@ void Controller::runCLI() {
                 if (this->findClub(clubName)) {
                     cout << "Club with this name already exists.\n";
                 } else {
-<<<<<<< HEAD
                         // Use the Student as the club admin (Member*)
             // create club and set admin
-=======
->>>>>>> 50638ab08ecbd0d32362c224b051ec55860006a1
                         club* newClub = new club(clubName, s);
                         // push into this Controller's clubs list
                         clubs.push_back(newClub);
-<<<<<<< HEAD
                         
-                        // add creator to members of the club (club::addMember already avoids duplicates)
+                        // add creator to members of the club (club::addMember avoids duplicates)
                         newClub->addMember(s);
                         // also add the club to the student's clubs list so they can view it (avoid duplicates)
                         bool studentHasClub = false;
@@ -177,12 +179,7 @@ void Controller::runCLI() {
                             if (s->getClubs().get(k) == newClub) { studentHasClub = true; break; }
                         }
                         if (!studentHasClub) s->getClubs().push_back(newClub);
-                        // member was already pushed during registration; no-op here
-=======
-                        newClub->addMember(s);
-                        s->getClubs().push_back(newClub);
-                        members.push_back(s);
->>>>>>> 50638ab08ecbd0d32362c224b051ec55860006a1
+                        // `members` already contains the student because we pushed it at registration
                         cout << "Club '" << clubName << "' created successfully and " << s->getName() << " is now the admin.\n";
                 }
             } else {
@@ -193,14 +190,12 @@ void Controller::runCLI() {
         cout << "Enter club name to join: ";
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         getline(cin, clubName);
-<<<<<<< HEAD
-        club* c = this->findClub(clubName);
-=======
-        // trim whitespace
+
+        // trim whitespace (both ends)
         while (!clubName.empty() && isspace((unsigned char)clubName.back())) clubName.pop_back();
-        size_t start = 0; while (start < clubName.size() && isspace((unsigned char)clubName[start])) start++; if (start > 0) clubName = clubName.substr(start);
-        club* c = findClub(clubName);
->>>>>>> 50638ab08ecbd0d32362c224b051ec55860006a1
+        size_t start = 0; while (start < clubName.size() && isspace((unsigned char)clubName[start])) ++start; if (start > 0) clubName = clubName.substr(start);
+        club* c = this->findClub(clubName);
+
         if (c) {
             // check if already a member
             c->addMember(current_user);
@@ -218,7 +213,7 @@ void Controller::runCLI() {
         }
     } else if (choice == 3) {
         if (Student* s = dynamic_cast<Student*>(current_user)) {
-            // Get student's clubs (assumes getClubs() returns Vector<club*>&)
+            // Get student's clubs 
             auto& myClubs = s->getClubs();
             if (myClubs.getSize() == 0) {
                 cout << "You are not a member of any clubs.\n";
@@ -259,10 +254,8 @@ void Controller::runCLI() {
                         int cchoice = get_choice(clubOptions.size());
                         if (cchoice == 1) {
                             cout << "Club Name: " << chosen->getName() << "\n";
-                            // If club class provides more info (members, admin), show here.
-                            // e.g. // cout << "Members: " << chosen->memberCount() << "\n";
                         } else if (cchoice == 2) {
-                            break; // back to student's club list / main menu
+                            break; // back to main menu
                         }
                     }
                 }
