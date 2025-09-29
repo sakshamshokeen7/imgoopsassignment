@@ -15,13 +15,17 @@ void club::listallmembers() {
         cout << "NO MEMBERS\n";
         return;
     }
-    for (int i = 0; i < members.getSize(); ++i) {   
+    for (std::size_t i = 0; i < members.getSize(); ++i) {
         cout << "- " << members.get(i)->getName()
              << " roll no: " << members.get(i)->getRoll() << "\n";
     }
 }
 
 void club::addMember(Member* m) {
+    // avoid duplicate members
+    for (std::size_t i = 0; i < members.getSize(); ++i) {
+        if (members.get(i) == m) return; // already a member
+    }
     members.push_back(m);
 }
 
@@ -30,8 +34,8 @@ void club::addAssignment(Assignment* a) {
 }
 
 void club::removeMember(Member* m){
-    for(int i=0; i<members.getSize(); i++){
-        if(members.get(i) == m){
+    for (std::size_t i = 0; i < members.getSize(); ++i) {
+        if (members.get(i) == m) {
             members.erase(i);
             cout << "Member removed successfully.\n";
             return;
@@ -46,7 +50,7 @@ void club::listallassignments() {
         cout << "  [No assignments]\n";
         return;
     }
-    for (int i = 0; i < assignments.getSize(); i++) {
+    for (std::size_t i = 0; i < assignments.getSize(); ++i) {
         cout << "  - " << assignments.get(i)->getTitle()
              << " (Max Score: " << assignments.get(i)->getMaxScore()
              << ", Deadline: " << assignments.get(i)->getDeadline() << ")\n";
