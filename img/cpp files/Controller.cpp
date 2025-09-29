@@ -6,6 +6,8 @@
 #include "vector.h"
 #include <iostream>
 #include <string>
+#include <algorithm>
+#include <cctype>
 #include <vector>
 #include <limits>
 using namespace std;
@@ -45,9 +47,27 @@ using namespace std;
     }
 
     //find club function
+    static string normalizeName(const string& s) {
+        // trim whitespace (including CR) and convert to lowercase
+        size_t start = 0;
+        while (start < s.size() && isspace((unsigned char)s[start])) ++start;
+        size_t end = s.size();
+        while (end > start && isspace((unsigned char)s[end-1])) --end;
+        string t = (start < end) ? s.substr(start, end - start) : string();
+        // to lower
+        std::transform(t.begin(), t.end(), t.begin(), [](unsigned char c){ return std::tolower(c); });
+        return t;
+    }
+
     club* findClub(const string& clubName){
-        for(int i=0 ; i < clubs.getSize(); i++){
-            if(clubs.get(i)->getName() == clubName){
+        string target = normalizeName(clubName);
+        std::cout << "(debug) findClub target raw='" << clubName << "' normalized='" << target << "'" << std::endl;
+        for (int i = 0; i < clubs.getSize(); i++) {
+            string raw = clubs.get(i)->getName();
+            string n = normalizeName(raw);
+            std::cout << "(debug) comparing with club[" << i << "] raw='" << raw << "' normalized='" << n << "'" << std::endl;
+            if (n == target) {
+                std::cout << "(debug) match at index " << i << "\n";
                 return clubs.get(i);
             }
         }
@@ -166,9 +186,6 @@ void Controller::runCLI() {
         cout << "Enter club name to join: ";
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         getline(cin, clubName);
-        // trim whitespace
-        while (!clubName.empty() && isspace((unsigned char)clubName.back())) clubName.pop_back();
-        size_t start = 0; while (start < clubName.size() && isspace((unsigned char)clubName[start])) start++; if (start > 0) clubName = clubName.substr(start);
         club* c = findClub(clubName);
         if (c) {
             // check if already a member
